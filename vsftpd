@@ -12,3 +12,5 @@ services:
       - FTP_USER=  # Nom d'utilisateur FTP
       - FTP_PASS=  # Mot de passe FTP
     restart: always  # Redémarrage automatique du conteneur en cas d'échec ou de redémarrage de l'hôte
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
