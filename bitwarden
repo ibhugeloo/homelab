@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  server:
+    restart: always
+    container_name: bitwarden
+    volumes:
+      - '/docker/bitwarden/data:/data/'
+    ports:
+      - '8800:80'
+    image: vaultwarden/server:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
