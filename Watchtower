@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 86400 --cleanup --label-enable
+    environment:
+      - TZ=Indian/Reunion
+    restart: always
