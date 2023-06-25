@@ -40,7 +40,7 @@ Enfin on vérifie l’installation de Docker sur la machine
 Créer un dossier docker pour toute les installations
 - mkdir docker
 
-# Commandes utiles
+# 💡 Commandes utiles
 - systemctl start/stop docker         
 - systemctl enable docker              
 - docker pull                           
