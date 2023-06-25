@@ -4,7 +4,6 @@ services:
   jellyfin:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
-    restart: always
     ports:
       - 8096:8096
     volumes:
@@ -14,6 +13,7 @@ services:
       - /docker/jellyfin/media/animes:/media/animes
       - /docker/jellyfin/media/series:/media/series
     environment:
-      - TZ=Indian/Reunion #Time Zone
+      - TZ=Indian/Reunion
+	restart: always
     labels:
-      - "com.centurylinklabs.watchtower.enable=true" #Label for watchtower update
+      - "com.centurylinklabs.watchtower.enable=true"
