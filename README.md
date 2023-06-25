@@ -37,6 +37,9 @@ Ensuite, on télécharge le paquet Docker depuis les sources
 Enfin on vérifie l’installation de Docker sur la machine
 - docker run hello-world
 
+Créer un dossier docker pour toute les installations
+- mkdir docker
+
 # Commandes utiles
 - systemctl start/stop docker         
 - systemctl enable docker              
