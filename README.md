@@ -1,5 +1,5 @@
 # docker-compose files
-All my docker-compose files for docker server
+All my docker-compose files for docker
 
 Liens vers docker hub ou github :
 - bitwarden : https://hub.docker.com/r/vaultwarden/server
