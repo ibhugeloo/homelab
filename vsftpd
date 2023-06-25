@@ -3,11 +3,12 @@ version: '3'
 services:
   vsftpd:
     image: fauria/vsftpd  # Utilise l'image Docker officielle de vsftpd
+    container_name: vsftpd
     ports:
       - 20:20  # Port pour les connexions de données FTP passive
       - 21:21  # Port pour les connexions de commande FTP
     volumes:
-      - /ftp:/home/vsftpd  # Montage du répertoire local ./ftp dans /home/vsftpd du conteneur
+      - /docker/ftp:/home/vsftpd  # Montage du répertoire local ./ftp dans /home/vsftpd du conteneur
     environment:
       - FTP_USER=  # Nom d'utilisateur FTP
       - FTP_PASS=  # Mot de passe FTP
