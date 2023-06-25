@@ -3,9 +3,10 @@ version: '3'
 services:
   watchtower:
     image: containrrr/watchtower
+    container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 86400 --cleanup --label-enable # La délai entre les vérifications de mise à jour
     environment:
-      - TZ=Indian/Reunion # Time Zone
+      - TZ=Indian/Reunion
+    command: --interval 86400 --cleanup --label-enable # La délai entre les vérifications de mise à jour
     restart: always # Redémarrage automatique du conteneur en cas d'échec ou de redémarrage de l'hôte
