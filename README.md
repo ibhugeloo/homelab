@@ -29,10 +29,10 @@ Ajout du repository Docker dans les sources
 - echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \ $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 Puis on met à jour la liste des sources
-- apt update 
+- apt update -y
 
 Ensuite, on télécharge le paquet Docker depuis les sources
-- apt install -y docker-ce docker-ce-cli containerd.io docker-compose
+- apt install -y docker.io docker-compose -y
 
 Enfin on vérifie l’installation de Docker sur la machine
 - docker run hello-world
