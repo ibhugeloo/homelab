@@ -15,8 +15,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Indian/Reunion
-      - TRANSMISSION_WEB_HOME=/combustion-release/
+      - TZ=Europe/Paris
       - USER=
       - PASS=
     restart: always
