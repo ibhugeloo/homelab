@@ -6,9 +6,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Indian/Reunion
+      - TZ=Europe/Paris
     volumes:
-      - /heimdall/config:/config
+      - docker/heimdall/config:/config
     ports:
       - 8008:80
       - 443:443
