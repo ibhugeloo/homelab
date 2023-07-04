@@ -13,7 +13,7 @@ services:
       - /docker/jellyfin/media/animes:/media/animes
       - /docker/jellyfin/media/series:/media/series
     environment:
-      - TZ=Indian/Reunion
+      - TZ=Europe/Paris
     restart: always
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
