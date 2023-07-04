@@ -7,6 +7,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - TZ=Indian/Reunion
+      - TZ=Europe/Paris
     command: --interval 86400 --cleanup --label-enable # La délai entre les vérifications de mise à jour
     restart: always # Redémarrage automatique du conteneur en cas d'échec ou de redémarrage de l'hôte
