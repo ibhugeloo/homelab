@@ -10,6 +10,7 @@ All my docker-compose files for docker
 - uptime-kuma : https://github.com/louislam/uptime-kuma
 - vsftpd : https://hub.docker.com/r/fauria/vsftpd
 - watchtower : https://hub.docker.com/r/containrrr/watchtower
+- heimdall : https://hub.docker.com/r/linuxserver/heimdall/
 
 # 🔧 Liens utiles
 - Cloudflare-tunnel : https://www.youtube.com/watch?v=ey4u7OUAF3c&t=416s
