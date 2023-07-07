@@ -23,7 +23,7 @@ Before using any code, make sure to check the official instructions from the doc
 - [Setup Docker in LXC](https://du.nkel.dev/blog/2021-03-25_proxmox_docker/)
 - [Official Docker Documentation](https://docs.docker.com/engine/install/debian/#install-using-the-repository)
 
-## 🐋 Docker Installation
+## 🐋 Docker Installation for Debian
 
 To begin the installation of Docker on Debian, follow these steps:
 
