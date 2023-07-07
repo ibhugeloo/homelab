@@ -1,5 +1,6 @@
 # docker-compose files
 All my docker-compose files for docker
+Always check the official instructions from the docs, for outdated code, before copy & paste !
 
 # 📤 Liens vers docker hub && github
 - portainer-be : https://hub.docker.com/r/portainer/portainer-ee
@@ -15,32 +16,35 @@ All my docker-compose files for docker
 # 🔧 Liens utiles
 - Cloudflare-tunnel : https://www.youtube.com/watch?v=ey4u7OUAF3c&t=416s
 - Twingate-vpn : https://www.youtube.com/watch?v=IYmXPF3XUwo
+- Setup Docker in LXC : https://du.nkel.dev/blog/2021-03-25_proxmox_docker/
+- Official docker documentation : https://docs.docker.com/engine/install/debian/#install-using-the-repository
 
-# 🐋 Installer docker
+# 🐋 Installer Docker
 Pour débuter l’installation de docker sur Debian, on va commencer par une mise à jour de la machine
 - apt update && apt full-upgrade -y
 
-Puis l’installation des dépendances
-- apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+Installer sudo
+- apt install sudo
 
-Ensuite, on ajout de la clé GPG officielle de Docker
-- curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+Mettre à jour tout les paquets
+- apt-get update && apt-get upgrade && apt-get dist-upgrade && apt-get autoremove
 
-Ajout du repository Docker dans les sources
-- echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \ $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+Installer Docker
+- sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+- curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+- echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \ $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+- sudo apt-get update
+- sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
 
-Puis on met à jour la liste des sources
-- apt update -y
-
-Ensuite, on télécharge le paquet Docker depuis les sources
-- apt install -y docker.io docker-compose -y
-
-Enfin on vérifie l’installation de Docker sur la machine
+Test Docker
+- systemctl status docker
 - docker run hello-world
-
-Créer un dossier docker pour toute les installations
-- mkdir docker
-
+ 
 # 💡 Commandes utiles
 - systemctl start/stop docker         
 - systemctl enable docker              
