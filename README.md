@@ -28,9 +28,6 @@ Before using any code, make sure to check the official instructions from the doc
 To begin the installation of Docker on Debian, follow these steps:
 
 ```shell
-# Update the machine
-sudo apt update && sudo apt full-upgrade -y
-
 # Install sudo
 sudo apt install sudo
 
