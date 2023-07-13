@@ -1,6 +1,6 @@
 Lancer le container Portainer-be ou ce
 
-docker run -d -p 9000:9000 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /docker/portainer/data:/data portainer/portainer-ee:latest
+sudo docker run -d -p 9000:9000 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /docker/portainer/data:/data portainer/portainer-ee:latest
 
 docker run -d -p 9000:9000 --name portainer \
     --restart=always \
@@ -9,6 +9,7 @@ docker run -d -p 9000:9000 --name portainer \
     portainer/portainer-ce:latest
 
 Mettre à jour 
-- docker stop portainer
-- docker rm portainer
-- docker pull portainer/portainer-ce:latest
+- sudo docker stop portainer
+- sudo docker rm portainer
+- sudo docker pull portainer/portainer-ee:latest
+- sudo docker pull portainer/portainer-ce:latest
