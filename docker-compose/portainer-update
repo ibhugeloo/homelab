@@ -1,0 +1,5 @@
+Mettre    jour
+- sudo docker stop portainer
+- sudo docker rm portainer
+- sudo docker pull portainer/portainer-ee:latest
+- sudo docker pull portainer/portainer-ce:latest

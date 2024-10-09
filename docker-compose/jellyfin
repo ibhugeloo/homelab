@@ -15,5 +15,3 @@ services:
     environment:
       - TZ=Europe/Paris
     restart: always
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
