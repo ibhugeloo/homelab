@@ -1,0 +1,11 @@
+# Fichiers de configuration locaux
+.env
+config.yml
+
+# Répertoires générés par Docker
+/volumes
+/logs
+
+# Fichiers temporaires du système
+.DS_Store
+Thumbs.db

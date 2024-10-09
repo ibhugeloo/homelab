@@ -1,0 +1,25 @@
+---
+services:
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest  # Image utilisee pour le service Transmission depuis LinuxServer.io
+    container_name: transmission  # Nom du conteneur pour faciliter sa gestion
+
+    environment:  # Variables d'environnement pour configurer Transmission
+      - PUID=${PUID}  # ID de l'utilisateur
+      - PGID=${PGID}  # ID du groupe
+      - TZ=${TZ}  # Fuseau horaire
+      - USER=${USER}  # Nom d'utilisateur pour se connecter a Transmission
+      - PASS=${PASS}  # Mot de passe pour l'utilisateur
+      - TRANSMISSION_WEB_UI=transmission-web-control  # Interface web utilisee par Transmission
+      - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true  # Activation de l'authentification sur l'interface web
+
+    volumes:  # Montage des volumes pour persister les donnees
+      - /docker/transmission/data:/config  # Repertoire de configuration de Transmission
+      - /docker/transmission/downloads:/downloads  # Repertoire ou seront stockes les telechargements
+      - /docker/transmission/watch:/watch  # Repertoire surveille pour les nouveaux fichiers torrent
+
+    ports:  # Mappage des ports entre l'hote et le conteneur
+      - 9091:9091  # Port de l'interface web de Transmission
+
+    restart: always  # Redemarrage automatique du conteneur en cas d'arret ou de plantage
+
