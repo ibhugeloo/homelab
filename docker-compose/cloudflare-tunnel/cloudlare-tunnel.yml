@@ -1,5 +1,5 @@
 version: '3.9'
 services:
     cloudflared:
-        command: 'tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
+        command: 'tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}'
         image: 'cloudflare/cloudflared:latest'
