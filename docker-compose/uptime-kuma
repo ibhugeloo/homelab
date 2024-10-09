@@ -9,5 +9,3 @@ services:
     volumes:
       - /docker/uptime-kuma:/app/data
     restart: always
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"

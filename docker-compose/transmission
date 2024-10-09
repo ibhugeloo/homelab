@@ -19,5 +19,3 @@ services:
       - USER=
       - PASS=
     restart: always
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
