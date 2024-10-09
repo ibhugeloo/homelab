@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "${PROMETHEUS_PORT}:9090"  # Utilisation de la variable d'environnement pour le port
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "${GRAFANA_PORT}:3000"  # Utilisation de la variable d'environnement pour le port
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}  # Utilisation de la variable d'environnement pour le mot de passe admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "${NODE_EXPORTER_PORT}:9100"  # Utilisation de la variable d'environnement pour le port
+
+volumes:
+  grafana-storage:
+
