@@ -1,7 +1,7 @@
 version: '3.9'
 services:
-    cloudflared:
-        image: 'cloudflare/cloudflared:latest'
-        command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
-        environment:
-            - CLOUDFLARED_TOKEN=${CLOUDFLARED_TOKEN}
+  cloudflared:
+    image: 'cloudflare/cloudflared:latest'
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TOKEN}
