@@ -1,6 +1,7 @@
 # Fichiers de configuration locaux
 .env
 config.yml
+stack.env
 
 # Répertoires générés par Docker
 /volumes
