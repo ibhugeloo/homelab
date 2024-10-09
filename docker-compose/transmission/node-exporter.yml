@@ -1,0 +1,8 @@
+version: '3.8'  # Version du format de fichier Docker Compose utilise, compatible avec Docker Engine 19.03 et plus.
+
+services:
+  node_exporter:  # Nom du service. Ce sera le nom utilise pour gerer ce conteneur via Docker Compose.
+    image: prom/node-exporter:latest  # Image Docker utilisee pour ce service. Ici, on utilise l'image 'node-exporter' depuis Prometheus pour exporter des metriques systeme.
+    container_name: node_exporter  # Nom donne au conteneur pour le referencer facilement. Cela remplace le nom par defaut genere par Docker Compose.
+    network_mode: host  # Le conteneur utilise le reseau de l'hote, ce qui permet d'acceder aux memes interfaces reseau que la machine hote (utile pour surveiller tout le systeme).
+    restart: unless-stopped  # Politique de redemarrage : redemarre le conteneur sauf s'il est explicitement arrete.
