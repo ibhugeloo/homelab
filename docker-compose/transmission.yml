@@ -7,6 +7,10 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
+      - TRANSMISSION_WEB_UI=transmission-web-control
+      - TRANSMISSION_RPC_USERNAME=test
+      - TRANSMISSION_RPC_PASSWORD=test
+      - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
     volumes:
       - /docker/transmission/data:/config
       - /docker/transmission/downloads:/downloads
