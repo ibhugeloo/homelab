@@ -1,10 +1,7 @@
 version: '3.9'
 
 services:
-  cloudflaretunnel:
-    container_name: cloudflaretunnel-1
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-    command: tunnel --no-autoupdate run f1203689-7468-4f74-ba10-5e525586adb2 
+  cloudflared:
+    image: 'cloudflare/cloudflared:latest'
+    command: 'tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}'
+    restart: always
