@@ -16,9 +16,3 @@ services:
       - sys_module
     entrypoint: /bin/sh -c "tailscaled & sleep 5 && tailscale up --authkey=${TS_AUTHKEY} --advertise-tags=tag:basic"
     restart: unless-stopped
-
-  nginx:
-    image: nginx
-    depends_on:
-      - tailscale-nginx
-    network_mode: service:tailscale-nginx
