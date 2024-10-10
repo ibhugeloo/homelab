@@ -1,18 +1,23 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  tailscale:
+  tailscale-nginx:
     image: tailscale/tailscale:latest
-    hostname: tailscale
+    hostname: tailscale-nginx
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
     volumes:
-      - ${PWD}/tailscale/state:/var/lib/tailscale
+      - ${PWD}/tailscale-nginx/state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
       - sys_module
-    entrypoint: /bin/sh -c "tailscaled & sleep 5 && tailscale up --authkey=${TS_AUTHKEY}"
     restart: unless-stopped
+
+  nginx:
+    image: nginx
+    depends_on:
+      - tailscale-nginx
+    network_mode: service:tailscale-nginx
