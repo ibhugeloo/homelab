@@ -1,7 +1,19 @@
 version: '3.9'
+
+networks:
+  frontend:
+    external: true
+  backend:
+    external: true
+
 services:
-  cloudflared:
-    image: 'cloudflare/cloudflared:latest'
-    command: tunnel run ${TUNNEL_NAME}
+  cloudflaretunnel:
+    container_name: cloudflaretunnel-1
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARED_TOKEN}
+      - TUNNEL_TOKEN=$TUNNEL_TOKEN
+    command: tunnel --no-autoupdate run
+    networks:
+      - frontend
+      - backend
