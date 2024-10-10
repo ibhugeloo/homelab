@@ -14,6 +14,7 @@ services:
     cap_add:
       - net_admin
       - sys_module
+    entrypoint: /bin/sh -c "tailscaled & sleep 5 && tailscale up --authkey=${TS_AUTHKEY} --advertise-tags=tag:basic"
     restart: unless-stopped
 
   nginx:
