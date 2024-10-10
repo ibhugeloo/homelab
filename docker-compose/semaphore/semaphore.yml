@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 volumes:
   semaphore-postgres:
@@ -6,7 +6,7 @@ volumes:
 
 services:
   postgres:
-    image: postgres:14
+    image: docker.io/library/postgres:latest
     hostname: postgres-sema
     volumes:
       - semaphore-postgres:/var/lib/postgresql/data
@@ -35,6 +35,7 @@ services:
       - SEMAPHORE_ADMIN_EMAIL=${SEMAPHORE_ADMIN_EMAIL}
       - SEMAPHORE_ADMIN=admin
       - SEMAPHORE_ACCESS_KEY_ENCRYPTION=${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
+      - ANSIBLE_USER=${ANSIBLE_USER}
       - TZ=Europe/Berlin
     volumes:
       - /root/docker/semaphore/data:/var/lib/semaphore
