@@ -7,5 +7,4 @@ services:
     restart: unless-stopped
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-      - TUNNEL_ID=${TUNNEL_ID}
-    command: tunnel --no-autoupdate run ${TUNNEL_ID}
+    command: tunnel --no-autoupdate run ${TUNNEL_NAME}
