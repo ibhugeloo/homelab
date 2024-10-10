@@ -1,5 +1,9 @@
 version: "3.7"
 
+networks:
+  semaphore-net:
+    driver: bridge
+
 volumes:
   semaphore-postgres:
     driver: local
@@ -8,6 +12,8 @@ services:
   postgres:
     image: docker.io/library/postgres:latest
     hostname: postgres-sema
+    networks:
+      - semaphore-net
     volumes:
       - semaphore-postgres:/var/lib/postgresql/data
     environment:
@@ -20,6 +26,8 @@ services:
     container_name: ansiblesemaphore
     image: semaphoreui/semaphore:latest
     user: "${UID}:${GID}"
+    networks:
+      - semaphore-net
     ports:
       - 3000:3000
     environment:
