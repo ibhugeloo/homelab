@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"  # Expose le port 9100 pour que Prometheus puisse y accéder
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    environment:
+      - NODE_EXPORTER_TEXTFILE_DIR=/host/textfile
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($|/)"'
+    network_mode: host
