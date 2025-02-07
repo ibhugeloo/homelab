@@ -9,11 +9,11 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - heimdall_config:/config   # Utiliser le volume Docker nommé 'heimdall_config'
+      - heimdall_config:/config
     ports:
-      - ${HEIMDALL_PORT}:80       # Expose le port 80 du conteneur au port HEIMDALL_PORT de l’hôte
+      - ${HEIMDALL_PORT}:80       
     restart: unless-stopped
 
 volumes:
   heimdall_config:
-    driver: local  # Spécifie le driver du volume (local par défaut)
+    driver: local
