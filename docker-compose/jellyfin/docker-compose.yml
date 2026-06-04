@@ -1,0 +1,19 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    ports:
+      - "8096:8096"
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./config:/config
+      - ./cache:/cache
+      - /data/media/movies:/media/movies
+      - /data/media/tv:/media/tv
+      - /data/media/music:/media/music
+    # Uncomment for hardware transcoding (Intel QSV / VAAPI)
+    # devices:
+    #   - /dev/dri:/dev/dri
