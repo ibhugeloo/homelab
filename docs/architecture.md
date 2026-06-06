@@ -22,6 +22,20 @@ omitted on purpose.
 | `pve-infra` | Networking (OPNsense), tunnel ingress, DNS, reverse proxy, monitoring, backup, automation, media & personal apps, remote-access agent |
 | `pve-apps`  | Local production apps, dev/staging environments, per-project databases |
 
+### Hardware
+
+Both nodes are low-power 8th-gen Intel mini-PCs (35 W TDP), chosen for a quiet,
+cheap 24/7 lab rather than raw throughput.
+
+| Node | CPU | RAM | Storage |
+|------|-----|-----|---------|
+| `pve-infra` | Intel Core i5-8500T — 6C / 6T · 2.1 → 3.5 GHz · 35 W | 32 GB DDR4-2933 (2 × 16) | 1 TB NVMe (Crucial P310) — VM/LXC volumes · 500 GB 2.5″ SSHD — backups + bulk media |
+| `pve-apps`  | Intel Core i3-8100T — 4C / 4T · 3.1 GHz · 35 W | 32 GB DDR4-2667 (2 × 16) | 500 GB NVMe (Samsung 980) — VM/LXC volumes · 500 GB 2.5″ HDD — bulk / backup |
+
+VM/LXC volumes sit on the NVMe as thin-provisioned LVM; the 2.5″ spinner carries
+the Proxmox Backup Server datastore and re-downloadable media. Both nodes ship
+32 GB; `pve-infra` carries the larger 1 TB NVMe to hold the media library.
+
 Each host uses one VLAN-aware Linux bridge. Workloads are LXC containers for
 lightweight single-purpose services and full VMs where isolation or a dedicated
 kernel matters (databases, Docker hosts, monitoring).
@@ -45,6 +59,30 @@ kernel matters (databases, Docker hosts, monitoring).
 | 🟢 Production | WAN only | Prod is sealed from the rest of the lab |
 | 🟡 Dev | WAN only | Dev can never touch Prod |
 | 🟠 Media | WAN only | A compromised torrent client stays contained |
+
+### Request lifecycle (exposed service)
+
+How a public request reaches an app without a single inbound port being open:
+
+```mermaid
+sequenceDiagram
+    actor U as User (Internet)
+    participant CF as Cloudflare edge
+    participant T as cf-tunnel<br/>(🔵 Infra)
+    participant FW as OPNsense
+    participant A as App<br/>(🟢 Prod VLAN)
+
+    U->>CF: HTTPS request to public hostname
+    Note over CF,T: tunnel is outbound-initiated —<br/>no inbound ports on the lab
+    CF->>T: over established tunnel
+    T->>FW: cross-VLAN Infra → Prod
+    Note over FW: allow-listed flow<br/>(deny-by-default otherwise)
+    FW->>A: forward to app
+    A-->>U: response (back through the tunnel)
+```
+
+Remote admin follows a different path entirely: **Tailscale** drops the operator
+into the Management VLAN, which is the only segment allowed to reach everything.
 
 ## Core services
 
