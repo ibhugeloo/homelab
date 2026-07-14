@@ -19,7 +19,7 @@ omitted on purpose.
 
 | Node | Role |
 |------|------|
-| `pve-infra` | Networking (OPNsense), tunnel ingress, DNS, reverse proxy, monitoring, backup, automation, media & personal apps, remote-access agent |
+| `pve-infra` | Networking (OPNsense), tunnel ingress, DNS, reverse proxy, monitoring, backup, fleet automation, 3-node k3s lab, self-hosted LLM agent, media & personal apps |
 | `pve-apps`  | Local production apps, dev/staging environments, per-project databases |
 
 ### Hardware
@@ -47,7 +47,7 @@ kernel matters (databases, Docker hosts, monitoring).
 | 🟣 Management | Proxmox hosts, backup server, firewall mgmt | Reaches all (VPN/Tailscale only) |
 | 🔵 Infra | Cloudflare Tunnel, DNS, reverse proxy, monitoring, automation | May route to Prod / Dev / Media |
 | 🟢 Production | Local prod apps + project databases | WAN only — isolated from other VLANs |
-| 🟡 Dev / Staging | Coolify worker + dev databases | WAN only — no access to Prod |
+| 🟡 Dev / Staging | Coolify worker, 3-node k3s cluster (GitOps), dev databases | WAN only — no access to Prod |
 | 🟠 Media & Personal | Single Docker VM | WAN only — isolated from business apps |
 
 ### Firewall matrix (inter-VLAN)
@@ -93,11 +93,18 @@ into the Management VLAN, which is the only segment allowed to reach everything.
 | Internal reverse proxy | Caddy |
 | Local DNS + filtering | AdGuard Home |
 | Remote access | Tailscale subnet-router (advertises internal VLAN ranges only) |
-| Metrics & logs | Prometheus + Grafana + Loki |
-| Uptime | Uptime Kuma |
+| Metrics | Prometheus + Grafana (central, lab-wide — the k8s cluster remote-writes into it) |
+| Uptime | Uptime Kuma (Telegram alert on any DOWN) |
 | Dashboard | Glance |
-| PaaS (dev/staging) | Coolify |
+| IaC | OpenTofu (Proxmox provider, brownfield import, PostgreSQL state backend) |
+| Fleet config | Ansible, driven from a Semaphore web UI |
+| PaaS (dev/staging) | Coolify — orchestrator VM strictly app-free, apps on dedicated workers |
+| GitOps (k8s lab) | ArgoCD — manifests in [`homelab-k8s`](https://github.com/ibhugeloo/homelab-k8s) |
 | Workflow automation | n8n |
+| AI agent | Self-hosted LLM agent (own LXC, Telegram interface, read-only knowledge base) |
+
+> Logs: Loki was decommissioned deliberately — never consulted in a solo lab,
+> pure RAM/disk cost. Logs are read on demand (`docker logs`, `kubectl logs`).
 
 ## Databases
 

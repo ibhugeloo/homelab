@@ -1,8 +1,8 @@
 # 🏠 Homelab
 
 Infrastructure-as-documentation for my self-hosted lab — a two-node Proxmox setup
-running my dev/staging environments, internal tooling, monitoring, and personal
-media services.
+running my dev/staging environments, internal tooling, monitoring, a 3-node
+Kubernetes lab, a self-hosted LLM agent, and personal media services.
 
 > **Design philosophy:** public production for clients lives on managed cloud
 > (Vercel, Supabase Cloud, Cloudflare). Everything else — dev, staging, internal
@@ -66,17 +66,19 @@ flowchart TB
         direction LR
         DNS[AdGuard DNS]
         RP[Caddy reverse proxy]
-        MON[Prometheus · Grafana · Loki]
-        AUTO[n8n automation]
+        MON[Prometheus · Grafana]
+        SEM[Semaphore · Ansible]
+        AI[self-hosted LLM agent]
     end
     subgraph PROD [🟢 Production VLAN]
         direction LR
         PA[local prod apps]
-        PDB[(project databases)]
+        PDB[(per-project Supabase VMs)]
     end
     subgraph DEV [🟡 Dev / Staging VLAN]
         direction LR
         CO[Coolify worker]
+        K3S[k3s HA ×3 · ArgoCD]
         DDB[(dev databases)]
     end
     subgraph MEDIA [🟠 Media & Personal VLAN]
@@ -90,9 +92,9 @@ flowchart TB
     classDef media fill:#ffedd5,stroke:#ea580c,color:#431407;
     classDef edge  fill:#f1f5f9,stroke:#475569,color:#0f172a;
     class MGMT,N1,N2,PBS mgmt;
-    class INFRA,DNS,RP,MON,AUTO infra;
+    class INFRA,DNS,RP,MON,SEM,AI infra;
     class PROD,PA,PDB prod;
-    class DEV,CO,DDB dev;
+    class DEV,CO,K3S,DDB dev;
     class MEDIA,DK media;
     class NET,CF,TS,FW edge;
 ```
@@ -121,14 +123,61 @@ flowchart TB
 
 ### Observability
 
-- **Prometheus + Grafana + Loki** — metrics & logs.
-- **Uptime Kuma** — uptime/status checks.
-- **Glance** — at-a-glance service dashboard.
+- **Prometheus + Grafana** — one central metrics stack for the whole lab;
+  node_exporter on every host feeds dashboards and the Glance widgets (live WAN
+  throughput, backup freshness…).
+- **Uptime Kuma** — HTTP checks on every service, **Telegram alert on any
+  `DOWN`**.
+- **Glance** — at-a-glance dashboard: fleet status, live metrics, topology map.
+- The k8s cluster ships its own metrics into the same central Prometheus
+  (`kube-state-metrics` + Grafana Alloy `remote_write`) — one Grafana, lab-wide.
 
-### Automation & platform
+> Loki was tried, then **decommissioned**: in a solo lab the logs were never
+> read, so it was pure RAM/disk cost. Logs are consulted on demand instead
+> (`kubectl logs`, `docker logs`). Observability you don't look at is waste.
 
-- **Coolify** — self-hosted PaaS for dev/staging deployments.
-- **n8n** — workflow automation.
+---
+
+## ⚙️ Provisioning & automation
+
+Three layers, each doing one job:
+
+| Layer | Tool | Job |
+|-------|------|-----|
+| Infrastructure | **OpenTofu** (Proxmox provider) | VMs/LXCs as code — adopted **brownfield by `import`**, state on a dedicated PostgreSQL backend |
+| Post-provisioning | **Ansible + Semaphore** | Idempotent config of the whole fleet (~17 targets) from a web UI; playbooks versioned on GitHub, pulled through a **read-only deploy key** |
+| App deployment | **Coolify** / **ArgoCD** | PaaS for Docker apps · GitOps for the k8s lab |
+
+Coolify runs split: the **orchestrator VM runs zero apps** — apps live on
+dedicated worker VMs (one for local prod, one for dev/staging). An app that
+saturates a worker can't take down the control plane. Project databases follow
+the same isolation rule: **one project = one dedicated self-hosted Supabase VM**,
+exposed only through the Cloudflare Tunnel. An **n8n** instance covers
+miscellaneous workflow automation.
+
+## ☸️ Kubernetes lab — GitOps
+
+A **3-node HA k3s cluster** (all nodes `control-plane,etcd`, MetalLB in L2 mode)
+lives in the Dev VLAN, built for two things: learning the industry-standard
+stack on real hardware, and rehearsing the migration path off Coolify.
+
+- Provisioned end-to-end by **one Semaphore button** (cloud-init template →
+  Ansible playbook) — the cluster is **disposable and rebuildable**.
+- Apps are reconciled by **ArgoCD** from a public repo:
+  **[`homelab-k8s`](https://github.com/ibhugeloo/homelab-k8s)** — `git push`
+  is the only deploy mechanism. Manifests, ops notes and the monitoring
+  federation design live there.
+- Total footprint: **~5 GB real RAM for all three nodes** (memory ballooning +
+  KSM on the host).
+
+## 🤖 Self-hosted AI agent
+
+An **LLM agent runs 24/7 in its own LXC** (open-weights model, self-hosted
+runtime), reachable over Telegram. It has a **read-only clone** of a
+git-versioned knowledge base — it can read everything, it can write nothing.
+It's one member of a multi-agent personal system whose engine, memory
+architecture and eval harness are documented in
+**[`manin-porunga`](https://github.com/ibhugeloo/manin-porunga)**.
 
 ---
 
