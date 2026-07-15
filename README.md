@@ -1,5 +1,18 @@
 # 🏠 Homelab
 
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg" width="34" title="Proxmox VE" alt="Proxmox VE" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opnsense.svg" width="34" title="OPNsense" alt="OPNsense" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg" width="34" title="Cloudflare Tunnel" alt="Cloudflare" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale.svg" width="34" title="Tailscale" alt="Tailscale" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/docker.svg" width="34" title="Docker" alt="Docker" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/k3s.svg" width="34" title="k3s" alt="k3s" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/argo-cd.svg" width="34" title="ArgoCD" alt="ArgoCD" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ansible.svg" width="34" title="Ansible" alt="Ansible" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opentofu.svg" width="34" title="OpenTofu" alt="OpenTofu" />&nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg" width="34" title="Grafana" alt="Grafana" />
+</p>
+
 Infrastructure-as-documentation for my self-hosted lab — a two-node Proxmox setup
 running my dev/staging environments, internal tooling, monitoring, a 3-node
 Kubernetes lab, a self-hosted LLM agent, and personal media services.
@@ -114,23 +127,22 @@ flowchart TB
 
 ### Edge & core services
 
-- **OPNsense** — router + firewall, inter-VLAN routing.
-- **Cloudflare Tunnel** — HTTPS ingress for exposed services (no public ports open).
-- **Caddy** — internal reverse proxy.
-- **AdGuard Home** — local DNS with ad/tracker blocking.
-- **Tailscale** — zero-trust remote access via a subnet-router (advertises the
-  internal VLAN ranges, not the home LAN).
+| | Service | Role |
+|:--:|---------|------|
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opnsense.svg" width="22" alt="OPNsense" /> | **OPNsense** | Router + firewall, inter-VLAN routing |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg" width="22" alt="Cloudflare" /> | **Cloudflare Tunnel** | HTTPS ingress for exposed services (no public ports open) |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/caddy.svg" width="22" alt="Caddy" /> | **Caddy** | Internal reverse proxy |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/adguard-home.svg" width="22" alt="AdGuard Home" /> | **AdGuard Home** | Local DNS with ad/tracker blocking |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale.svg" width="22" alt="Tailscale" /> | **Tailscale** | Zero-trust remote access via a subnet-router (advertises the internal VLAN ranges, not the home LAN) |
 
 ### Observability
 
-- **Prometheus + Grafana** — one central metrics stack for the whole lab;
-  node_exporter on every host feeds dashboards and the Glance widgets (live WAN
-  throughput, backup freshness…).
-- **Uptime Kuma** — HTTP checks on every service, **Telegram alert on any
-  `DOWN`**.
-- **Glance** — at-a-glance dashboard: fleet status, live metrics, topology map.
-- The k8s cluster ships its own metrics into the same central Prometheus
-  (`kube-state-metrics` + Grafana Alloy `remote_write`) — one Grafana, lab-wide.
+| | Service | Role |
+|:--:|---------|------|
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prometheus.svg" width="22" alt="Prometheus" /> <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg" width="22" alt="Grafana" /> | **Prometheus + Grafana** | One central metrics stack for the whole lab; node_exporter on every host feeds dashboards and the Glance widgets (live WAN throughput, backup freshness…) |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg" width="22" alt="Uptime Kuma" /> | **Uptime Kuma** | HTTP checks on every service, **Telegram alert on any `DOWN`** |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glance.svg" width="22" alt="Glance" /> | **Glance** | At-a-glance dashboard: fleet status, live metrics, topology map |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/k3s.svg" width="22" alt="k3s" /> | **k8s federation** | The cluster ships its metrics into the same central Prometheus (`kube-state-metrics` + Grafana Alloy `remote_write`) — one Grafana, lab-wide |
 
 > Loki was tried, then **decommissioned**: in a solo lab the logs were never
 > read, so it was pure RAM/disk cost. Logs are consulted on demand instead
@@ -142,11 +154,11 @@ flowchart TB
 
 Three layers, each doing one job:
 
-| Layer | Tool | Job |
-|-------|------|-----|
-| Infrastructure | **OpenTofu** (Proxmox provider) | VMs/LXCs as code — adopted **brownfield by `import`**, state on a dedicated PostgreSQL backend |
-| Post-provisioning | **Ansible + Semaphore** | Idempotent config of the whole fleet (~17 targets) from a web UI; playbooks versioned on GitHub, pulled through a **read-only deploy key** |
-| App deployment | **Coolify** / **ArgoCD** | PaaS for Docker apps · GitOps for the k8s lab |
+| | Layer | Tool | Job |
+|:--:|-------|------|-----|
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opentofu.svg" width="22" alt="OpenTofu" /> | Infrastructure | **OpenTofu** (Proxmox provider) | VMs/LXCs as code — adopted **brownfield by `import`**, state on a dedicated PostgreSQL backend |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ansible.svg" width="22" alt="Ansible" /> <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/semaphore.svg" width="22" alt="Semaphore" /> | Post-provisioning | **Ansible + Semaphore** | Idempotent config of the whole fleet (~17 targets) from a web UI; playbooks versioned on GitHub, pulled through a **read-only deploy key** |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg" width="22" alt="Coolify" /> <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/argo-cd.svg" width="22" alt="ArgoCD" /> | App deployment | **Coolify** / **ArgoCD** | PaaS for Docker apps · GitOps for the k8s lab |
 
 Coolify runs split: the **orchestrator VM runs zero apps** — apps live on
 dedicated worker VMs (one for local prod, one for dev/staging). An app that
@@ -187,14 +199,14 @@ All media and personal apps run as Docker containers on a **single VM** in the
 Media VLAN (Debian 12 + Docker). No per-service LXCs, no `*arr` automation —
 acquisition is manual, playback is via Jellyfin.
 
-| Service | Image | What it does |
-|---------|-------|--------------|
-| **Jellyfin** | `jellyfin/jellyfin` | Movies / TV / music streaming |
-| **Immich** | `ghcr.io/immich-app/immich-server` | Self-hosted photo & video backup (with ML + Postgres + Redis) |
-| **qBittorrent** | `lscr.io/linuxserver/qbittorrent` | Torrent client |
-| **Navidrome** | `deluan/navidrome` | Music streaming (Subsonic API) |
-| **MeTube** | `ghcr.io/alexta69/metube` | yt-dlp web frontend |
-| **Filebrowser** | `filebrowser/filebrowser` | Web file manager |
+| | Service | Image | What it does |
+|:--:|---------|-------|--------------|
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg" width="22" alt="Jellyfin" /> | **Jellyfin** | `jellyfin/jellyfin` | Movies / TV / music streaming |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg" width="22" alt="Immich" /> | **Immich** | `ghcr.io/immich-app/immich-server` | Self-hosted photo & video backup (with ML + Postgres + Redis) |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg" width="22" alt="qBittorrent" /> | **qBittorrent** | `lscr.io/linuxserver/qbittorrent` | Torrent client |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/navidrome.svg" width="22" alt="Navidrome" /> | **Navidrome** | `deluan/navidrome` | Music streaming (Subsonic API) |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/metube.svg" width="22" alt="MeTube" /> | **MeTube** | `ghcr.io/alexta69/metube` | yt-dlp web frontend |
+| <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/filebrowser.svg" width="22" alt="Filebrowser" /> | **Filebrowser** | `filebrowser/filebrowser` | Web file manager |
 
 Compose files for each live in [`docker-compose/`](./docker-compose/).
 
@@ -215,9 +227,9 @@ Compose files for each live in [`docker-compose/`](./docker-compose/).
 
 ## 💾 Backup — 3-2-1
 
-1. **Proxmox Backup Server** — daily snapshots of every VM/LXC across both nodes.
+1. <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox-backup-server.svg" width="18" alt="PBS" /> **Proxmox Backup Server** — daily snapshots of every VM/LXC across both nodes.
 2. **Second copy** — replicated to a separate volume/medium.
-3. **Offsite** — `rclone` to Backblaze B2 for critical data (prod apps, databases, photos).
+3. <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/backblaze.svg" width="18" alt="Backblaze B2" /> **Offsite** — `rclone` to Backblaze B2 for critical data (prod apps, databases, photos).
 
 Criticality: photos 🔴 (snapshot + DB dump) · Docker configs 🟡 · re-downloadable media 🟢.
 
