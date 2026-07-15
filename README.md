@@ -51,10 +51,10 @@ deny-by-default; only the flows below are allowed.
 
 ```mermaid
 flowchart TB
-    NET([🌍 Internet / WAN])
-    CF[☁️ Cloudflare Tunnel<br/>inbound HTTPS · no open ports]
-    TS[🔗 Tailscale<br/>remote admin · subnet-router]
-    FW{{🛡️ OPNsense<br/>router · firewall<br/>deny-by-default between VLANs}}
+    NET(["🌍 Internet / WAN"])
+    CF["☁️ Cloudflare Tunnel<br/>inbound HTTPS · no open ports"]
+    TS["🔗 Tailscale<br/>remote admin · subnet-router"]
+    FW{{"🛡️ OPNsense<br/>router · firewall<br/>deny-by-default between VLANs"}}
 
     NET --> CF --> FW
     NET <--> TS --> FW
@@ -69,33 +69,33 @@ flowchart TB
     DEV ==>|egress| NET
     MEDIA ==>|egress| NET
 
-    subgraph MGMT [🟣 Management VLAN]
+    subgraph MGMT ["🟣 Management VLAN"]
         direction LR
-        N1[pve-infra node]
-        N2[pve-apps node]
-        PBS[Proxmox Backup Server]
+        N1["pve-infra node"]
+        N2["pve-apps node"]
+        PBS["Proxmox Backup Server"]
     end
-    subgraph INFRA [🔵 Infra VLAN]
+    subgraph INFRA ["🔵 Infra VLAN"]
         direction LR
-        DNS[AdGuard DNS]
-        RP[Caddy reverse proxy]
-        MON[Prometheus · Grafana]
-        SEM[Semaphore · Ansible]
-        AI[self-hosted LLM agent]
+        DNS["AdGuard DNS"]
+        RP["Caddy reverse proxy"]
+        MON["Prometheus · Grafana"]
+        SEM["Semaphore · Ansible"]
+        AI["self-hosted LLM agent"]
     end
-    subgraph PROD [🟢 Production VLAN]
+    subgraph PROD ["🟢 Production VLAN"]
         direction LR
-        PA[local prod apps]
-        PDB[(per-project Supabase VMs)]
+        PA["local prod apps"]
+        PDB[("per-project Supabase VMs")]
     end
-    subgraph DEV [🟡 Dev / Staging VLAN]
+    subgraph DEV ["🟡 Dev / Staging VLAN"]
         direction LR
-        CO[Coolify worker]
-        K3S[k3s HA ×3 · ArgoCD]
-        DDB[(dev databases)]
+        CO["Coolify worker"]
+        K3S["k3s HA ×3 · ArgoCD"]
+        DDB[("dev databases")]
     end
-    subgraph MEDIA [🟠 Media & Personal VLAN]
-        DK[Docker VM<br/>Jellyfin · Immich · Navidrome …]
+    subgraph MEDIA ["🟠 Media &amp; Personal VLAN"]
+        DK["Docker VM<br/>Jellyfin · Immich · Navidrome …"]
     end
 
     classDef mgmt  fill:#f3e8ff,stroke:#9333ea,color:#3b0764;
