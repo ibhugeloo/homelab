@@ -1,6 +1,6 @@
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:v3.0.2
     container_name: immich_server
     restart: unless-stopped
     ports:
@@ -15,7 +15,7 @@ services:
       - immich-postgres
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:v3.0.2
     container_name: immich_machine_learning
     restart: unless-stopped
     env_file:
@@ -31,7 +31,7 @@ services:
       test: redis-cli ping || exit 1
 
   immich-postgres:
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     container_name: immich_postgres
     restart: unless-stopped
     environment:
